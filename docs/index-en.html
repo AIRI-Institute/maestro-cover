@@ -549,10 +549,326 @@ chain = ReasoningChain(
 result = chain.execute(context)</code></pre>
                 </div>
 
+                <!-- Работа с результатами выполнения цепочек -->
+                    <div class="mb-4">
+                        <h4 class="mb-3">Working with Chain Execution Results</h4>
+                        <div class="mb-5">
+                            <p>After executing the reasoning chain, the <code>execute()</code> method returns a <code>ReasoningResult</code> object that contains complete information about the execution of all steps.</p>
+                            <pre><code>class ReasoningResult:
+    success: bool                           # Overall execution success
+    history: list[str]                      # Full reasoning history
+    step_results: list[StepExecutionResult] # Results of each step
+    total_execution_time: float | None      # Total execution time
+    metadata: dict[str, Any]                # Additional metadata
+                            </code></pre>
+                            <p>Each step returns detailed information about its execution:</p>
+                            <pre><code>class StepExecutionResult:
+    step_number: int             # Step number
+    step_title: str              # Step title
+    result: str                  # Result from LLM
+    success: bool                # Step execution success
+    error_message: str | None    # Error message
+    execution_time: float | None # Execution time in seconds
+    updated_history: list[str]   # History after this step
+                            </code></pre>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <h5 class="mb-3">Getting the Final Result</h5>
+                        <div class="mb-5">
+                            <p><strong><code>get_final_output()</code></strong> -- returns only the text of the last step without any service headers:</p>
+                            <pre><code>result = chain.execute(context)
+# Get only the final step output
+final_answer = result.get_final_output()
+print(final_answer)
+                            </code></pre>
+                            <p><strong>Example output:</strong></p>
+                            <pre><code>Based on the clinical picture and examination results, the patient is diagnosed with stage II arterial hypertension with a high risk of cardiovascular complications...
+                            </code></pre>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <h5 class="mb-3">Getting the Full History</h5>
+                        <div class="mb-5">
+                            <p><strong><code>get_full_output()</code></strong> -- returns the full execution history with all steps:</p>
+                            <pre><code class="language-python">
+# Get the entire reasoning history
+full_history = result.get_full_output()
+print(full_history)
+                            </code></pre>
+                            <p><strong>Example output:</strong></p>
+
+                            <pre><code>
+Step 1. Collection of Complaints and Medical History
+Result: The patient reports complaints of chest pain...
+
+Step 2. Analysis of Objective Data
+Result: Objective examination of tests revealed the following abnormalities...
+
+Step 3. Formation of Diagnostic Conclusion
+Result: Based on the clinical picture...
+                            </code></pre>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <h5 class="mb-3">Working with Results of Individual Steps</h5>
+                        <div class="mb-5">
+                            <p><strong><code>step_results</code></strong> -- a list of <code>StepExecutionResult</code> objects for each step:</p>
+                            <pre><code class="language-python">
+# Iterating over the results of each step
+for step in result.step_results:
+    print(f"Step {step.step_number}: {step.step_title}")
+    print(f"Status: {'✓' if step.success else '✗'}")
+    print(f"Execution time: {step.execution_time:.2f}s")
+    print(f"Result: {step.result}\n")
+                            </code></pre>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <h5 class="mb-3">Filtering Successful and Failed Steps</h5>
+                        <div class="mb-5">
+                            <p><strong><code>get_successful_steps()</code></strong> -- returns only successfully completed steps:</p>
+
+                            <pre><code class="language-python">
+successful = result.get_successful_steps()
+print(f"Successfully completed: {len(successful)} steps")
+                            </code></pre>
+
+                            <p><strong><code>get_failed_steps()</code></strong> -- returns steps with errors:</p>
+
+                            <pre><code class="language-python">
+failed = result.get_failed_steps()
+if failed:
+    print("Execution errors:")
+    for step in failed:
+        print(f"  Step {step.step_number}: {step.error_message}")
+                            </code></pre>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <h5 class="mb-3">Comparison of Output Retrieval Methods</h5>
+                        <div class="mb-5">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Method</th>
+                                                <th>Purpose</th>
+                                                <th>Output Format</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td><code>get_final_output()</code></td>
+                                                <td>Only the final answer</td>
+                                                <td>Plain text without headers</td>
+                                            </tr>
+                                            <tr>
+                                                <td><code>get_full_output()</code></td>
+                                                <td>Complete history</td>
+                                                <td>Text with all steps and headers</td>
+                                            </tr>
+                                            <tr>
+                                                <td><code>step_results</code></td>
+                                                <td>Access to individual steps</td>
+                                                <td>List of <code>StepExecutionResult</code> objects</td>
+                                            </tr>
+                                            <tr>
+                                                <td><code>history</code></td>
+                                                <td>Direct access to history</td>
+                                                <td>List of strings</td>
+                                            </tr>
+                                            <tr>
+                                                <td><code>get_successful_steps()</code></td>
+                                                <td>Only successful steps</td>
+                                                <td>List of successful <code>StepExecutionResult</code></td>
+                                            </tr>
+                                            <tr>
+                                                <td><code>get_failed_steps()</code></td>
+                                                <td>Only steps with errors</td>
+                                                <td>List of failed <code>StepExecutionResult</code></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <h5 class="mb-3">Usage Recommendations</h5>
+                        <div class="mb-5">
+                            <ol>
+                                <li><strong>For production applications</strong>, use <code>get_final_output()</code> to display the final result to the user and for use in multi-agent system nodes</li>
+                                <li><strong>For debugging</strong>, apply <code>get_full_output()</code> and detailed analysis of <code>step_results</code></li>
+                                <li><strong>For monitoring</strong>, track <code>success</code>, <code>execution_time</code>, and <code>metadata</code></li>
+                                <li><strong>For logging</strong>, save the complete <code>history</code> and error information</li>
+                                <li><strong>For analytics</strong>, use metadata from <code>result.metadata</code> to analyze performance</li>
+                            </ol>
+                        </div>
+                    </div>
+                    <!-- Дропдаун с подробностями -->
+                    <div class="accordion mb-5">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#carlDetails">
+                                    📋 Examples of Result Processing
+                                </button>
+                            </h2>
+                            <div id="carlDetails" class="accordion-collapse collapse">
+                                <div class="accordion-body">
+
+                                    <div class="mb-4">
+                                        <h5 class="mb-3">Example 1: Basic Result Handling</h5>
+                                        <div class="mb-5">
+
+                                                <pre><code class="language-python">
+result = chain.execute(context)
+
+# Check success
+if result.success:
+    print("✓ Chain executed successfully")
+    print(f"Total time: {result.total_execution_time:.2f}s")
+    print(f"\nFinal output:\n{result.get_final_output()}")
+else:
+    print("✗ Execution finished with errors")
+    for failed_step in result.get_failed_steps():
+        print(f"  Step {failed_step.step_number}: {failed_step.error_message}")
+                                            </code></pre>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <h5 class="mb-3">Example 2: Detailed Execution Analysis</h5>
+                                        <div class="mb-5">
+                                            <pre><code class="language-python">
+result = chain.execute(context)
+
+print("=== EXECUTION STATISTICS ===")
+print(f"Total steps: {len(result.step_results)}")
+print(f"Successful: {len(result.get_successful_steps())}")
+print(f"Failed: {len(result.get_failed_steps())}")
+print(f"Total time: {result.total_execution_time:.2f}s")
+
+# Detailed information for each step
+print("\n=== STEP RESULTS ===")
+for step in result.step_results:
+    status = "✓ SUCCESS" if step.success else "✗ ERROR"
+    print(f"\n[{status}] Step {step.step_number}: {step.step_title}")
+    print(f"Time: {step.execution_time:.2f}s")
+
+    if step.success:
+        # Show the first 200 characters of the result
+        preview = step.result[:200] + "..." if len(step.result) > 200 else step.result
+        print(f"Result: {preview}")
+    else:
+        print(f"Error: {step.error_message}")
+                                            </code></pre>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <h5 class="mb-3">Example 3: Working with Metadata</h5>
+                                        <div class="mb-5">
+
+                                                <pre><code class="language-python">
+result = chain.execute(context)
+
+# Retrieving execution statistics
+if "execution_stats" in result.metadata:
+    stats = result.metadata["execution_stats"]
+    print("=== PARALLELIZATION STATISTICS ===")
+    print(f"Parallel batches: {stats['parallel_batches']}")
+    print(f"Total steps: {stats['total_steps']}")
+    print(f"Executed: {stats['executed_steps']}")
+    print(f"Errors: {stats['failed_steps']}")
+                                            </code></pre>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <h5 class="mb-3">Example 4: Accessing Execution History</h5>
+                                        <div class="mb-5">
+                                            <p>The <code>history</code> attribute contains a list of strings with the results of each step in execution order:</p>
+
+                                            <pre><code class="language-python">
+result = chain.execute(context)
+
+# Get history as a list
+for i, entry in enumerate(result.history, 1):
+    print(f"\n--- Entry {i} ---")
+    print(entry)
+
+# Or as a single string
+full_text = result.get_full_output()
+                                            </code></pre>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <h5 class="mb-3">Example 5: Error Handling</h5>
+                                        <div class="mb-5">
+                                            <p>In case of errors during execution:</p>
+
+                                            <pre><code class="language-python">
+result = chain.execute(context)
+
+if not result.success:
+    print("⚠ Errors detected in chain execution")
+
+    # Retrieve all failed steps
+    failed_steps = result.get_failed_steps()
+
+    for step in failed_steps:
+        print(f"\nError at step {step.step_number}: {step.step_title}")
+        print(f"Message: {step.error_message}")
+
+        # Show the last successful entry in history
+        if step.updated_history:
+            print(f"Last history entry: {step.updated_history[-1][:100]}...")
+
+    # Get partial results of successful steps
+    successful_steps = result.get_successful_steps()
+    print(f"\nSuccessfully completed {len(successful_steps)} out of {len(result.step_results)} steps")
+                                            </code></pre>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <h5 class="mb-3">Example 6: Integration with Logging System</h5>
+                                        <div class="mb-5">
+                                            <pre><code class="language-python">
+import logging
+
+logger = logging.getLogger(__name__)
+
+result = chain.execute(context)
+
+# Logging results
+logger.info(f"Chain execution completed: success={result.success}")
+logger.info(f"Total execution time: {result.total_execution_time:.2f}s")
+
+for step in result.step_results:
+    if step.success:
+        logger.debug(f"Step {step.step_number} succeeded in {step.execution_time:.2f}s")
+    else:
+        logger.error(f"Step {step.step_number} failed: {step.error_message}")
+
+# Saving final result
+logger.info(f"Final output: {result.get_final_output()}")
+                                            </code></pre>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
 <!-- Сервис авторизации -->
 <section class="mb-5" id="auth-service">

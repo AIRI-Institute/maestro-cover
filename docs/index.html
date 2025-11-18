@@ -554,21 +554,21 @@ result = chain.execute(context)</code></pre>
                         <div class="mb-5">
                             <p>После выполнения цепочки рассуждений метод <code>execute()</code> возвращает объект <code>ReasoningResult</code>, который содержит полную информацию о выполнении всех шагов.</p>
                             <pre><code>class ReasoningResult:
-success: bool                           # Общий успех выполнения
-history: list[str]                      # Полная история рассуждений
-step_results: list[StepExecutionResult] # Результаты каждого шага
-total_execution_time: float | None      # Общее время выполнения
-metadata: dict[str, Any]                # Дополнительные метаданные
+    success: bool                           # Общий успех выполнения
+    history: list[str]                      # Полная история рассуждений
+    step_results: list[StepExecutionResult] # Результаты каждого шага
+    total_execution_time: float | None      # Общее время выполнения
+    metadata: dict[str, Any]                # Дополнительные метаданные
                             </code></pre>
                             <p>Каждый шаг возвращает детальную информацию о своем выполнении:</p>
                             <pre><code>class StepExecutionResult:
-step_number: int             # Номер шага
-step_title: str              # Название шага
-result: str                  # Результат от LLM
-success: bool                # Успешность выполнения
-error_message: str | None    # Сообщение об ошибке
-execution_time: float | None # Время выполнения в секундах
-updated_history: list[str]   # История после этого шага
+    step_number: int             # Номер шага
+    step_title: str              # Название шага
+    result: str                  # Результат от LLM
+    success: bool                # Успешность выполнения
+    error_message: str | None    # Сообщение об ошибке
+    execution_time: float | None # Время выполнения в секундах
+    updated_history: list[str]   # История после этого шага
                             </code></pre>
                         </div>
                     </div>

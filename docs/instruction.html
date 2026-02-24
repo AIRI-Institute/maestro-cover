@@ -1,0 +1,503 @@
+<!doctype html>
+<html lang="ru">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>MAESTRO</title>
+
+        <link rel="icon" type="image/svg+xml" href="favicon.png" />
+
+        <!-- ===== Fonts ===== -->
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+            rel="stylesheet"
+        />
+
+        <!-- ===== Styles ===== -->
+        <link rel="stylesheet" href="styles/bundle.css" />
+        <link rel="stylesheet" href="styles/template.css" />
+        <link rel="stylesheet" href="styles/custom.css" />
+
+        <!-- ===== JavaScript Libraries ===== -->
+        <script src="scripts/bundle.js"></script>
+        <script src="scripts/custom.js"></script>
+    </head>
+
+    <body class="layout">
+        <!-- =====================================================
+             HEADER SECTION
+             ===================================================== -->
+        <header
+            id="page-header"
+            class="mb-5 pt-5 pb-5"
+            style="background: linear-gradient(180deg, rgb(254, 243, 227) 0%, rgba(255, 255, 255, 1) 100%)"
+        >
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-8 text-center">
+                        <!-- Logo Section -->
+                        <div class="d-flex flex-wrap justify-content-center gap-3 mb-5">
+                            <img class="w-25" src="images/airi_logo_black.svg" alt="AIRI" />
+                        </div>
+
+                        <!-- Title -->
+                        <h1 class="mb-4">MAESTRO</h1>
+                        <p class="lead mb-5">
+                        Multi-Agent Ecosystem of Task Reasoning and Orchestration
+                        </p>
+                        <h1 class="mb-4">Пример создание ассистента в рамках MAESTRO</h1>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- =====================================================
+             NAV CONTENT
+             ===================================================== -->
+        <nav
+            id="page-navbar"
+            class="navbar navbar-light flex-column align-items-stretch p-3 d-none d-lg-block"
+            style="
+                position: fixed;
+                top: 80px;
+                left: 20px;
+                width: 220px;
+                max-height: calc(100vh - 140px);
+                overflow-y: auto;
+                z-index: 1000;
+                opacity: 0;
+                visibility: hidden;
+            "
+        >
+            <h6 class="navbar-brand mb-3">Оглавление</h6>
+            <nav class="nav nav-pills flex-column">
+                <a class="nav-link" href="#task">Задача</a>
+                <a class="nav-link" href="#plan">Планирование</a>
+                <a class="nav-link" href="#maestro">Создание трека на базовом MAESTRO</a>
+                <a class="nav-link" href="#langchain">Создание трека на Langchain</a>
+                <a class="nav-link" href="#react">Создание трека на ReAct</a>
+                <a class="nav-link" href="#document-extractor">Сервис Document Extractor</a>
+                <a class="nav-link" href="#ptag">Библиотека mmar-ptag</a>
+                <a class="nav-link" href="#mapi">Библиотека mmar-mapi</a>
+            </nav>
+        </nav>
+
+        <!-- =====================================================
+             MAIN CONTENT
+             ===================================================== -->
+        <main
+            id="page-main"
+            data-bs-spy="scroll"
+            data-bs-target="#page-navbar"
+            data-bs-root-margin="0px 0px -40%"
+            tabindex="0"
+            class="position-relative pb-5"
+        >
+<!-- task -->
+<section class="mb-5" id="task">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <h2 class="mb-4">Задача</h2>
+                <p class="mb-4">Создание ассистента для извлечения метаданных из научной публикации и последующих ответов на основе извлеченной информации.</p>
+                <ol>
+                    <li>Извлечь из статьи метаданные в формате Json для дальнейшего использования.</li>
+                    <li>Провести семантический анализ.</li>
+                    <li>Провести морфологический анализ и дедубликацию</li>
+                </ol>
+                <p class="mb-4">В качестве примера, создаём агентов на базовом <strong>MAESTRO</strong>, <strong>Langchain</strong> и <strong>ReAct</strong>.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Планирование -->
+<section class="mb-5" id="plan">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">                            
+                <!-- Основной заголовок секции -->
+                <h2 class="mb-4">Планирование</h2>
+                <h4 class="mb-4">Определить множества типов ввода и вывода ассистента</h4>
+                <p class="mb-2"><strong>Ввод</strong></p>
+                    <ul class="mb-2">
+                        <li>pdf-файл научной публикации</li>
+                    </ul>
+                <p class="mb-2"><strong>Вывод</strong></p>
+                    <ul class="mb-2">
+                        <li>json-файл с метаданными по этой публикации</li>
+                        <li>Текст ответа на вопрос пользователя по извлеченным метаданным</li>
+                    </ul>
+
+                <h4 class="mb-4">Определить примерную последовательность работы ассистента</h4>
+                <ol>
+                    <li>Извлечение текста из pdf-файла</li>
+                    <li>Обработка извлеченного текста с помощью LLM для получения необходимых метаданных</li>
+                    <li>Ответ на вопрос по извлеченным метаданным</li>
+                </ol>
+
+                <h4 class="mb-4">Определить необходимые для создания и уже имеющиеся в кодовой базе компоненты</h4>
+                    <ul class="mb-4">
+                        <li><a href="#document-extractor"><strong>DocumentExtractor</strong></a> - <strong>существующий компонент</strong> - OCR сервис для извлечения текста и его структуры из файла</li>
+                        <li><a href="#maestro"><strong>MetadataExtractor</strong></a> - <strong>новый компонент (Базовый)</strong> - сервис для извлечения метаданных из текста публикации</li>
+                        <li><a href="#langchain"><strong>LangchainExtractor</strong></a> - <strong>новый компонент (Langchain)</strong> - сервис для извлечения метаданных из текста публикации</li>
+                        <li><a href="#react"><strong>ReactExtractor</strong></a> - <strong>новый компонент (ReAct)</strong> - сервис для извлечения метаданных из текста публикации</li>
+                    </ul>
+
+                <!-- Схема архитектуры -->
+                <div class="mb-4">   
+                    <a
+                        href="images/scheme_instr.jpg"
+                        data-fancybox="single"
+                        data-caption="Architecture Diagram"
+                    >
+                        <img src="images/scheme_instr.jpg" alt="Architecture" class="img-fluid rounded shadow-sm" />
+                    </a>
+                </div> 
+                <h4 class="mb-4">Определить примерный набор функций, вызываемых по ходу диалога</h4>
+                <ul class="mb-2">
+                    <li><strong>Ввод:</strong> pdf-файл, <strong>вывод:</strong> txt-файл  </li>
+                    <li><strong>Ввод:</strong> txt-файл, <strong>вывод:</strong> json-файл с метаданными </li>
+                    <li><strong>Ввод:</strong> вопрос пользователя, <strong>вывод:</strong> ответ LLM </li>
+                </ul>
+            </div>            
+        </div>
+    </div>
+</section>
+
+<!-- Создание трека на базовом MAESTRO -->
+<section class="mb-5" id="maestro">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">                            
+                <!-- Создание компонентов -->
+                <h2 class="mb-4">Создание трека на базовом MAESTRO</h2>
+                <h4 class="mb-4">Создание компонентов</h4>
+                <h5 class="mb-4">Инициализировать необходимые компоненты</h5>
+                    <ul class="mb-4">
+                        <li>Инициализация с помощью существующего <a href="https://gitlab.2a2i.org/agi/templates/maestro-grpc-service-template"><strong>шаблона сервисов</strong></a> </li>
+                        <li>Указание имени нового компонента <strong>metadata-extractor</strong></li>
+                    </ul>
+                <h5 class="mb-4">Определить ввод и вывод нового компонента</h5>
+                <ol class="mb-4">
+                    <li><strong>DocumentExtractor</strong> возвращает текстовый файл со структурой, значит на вход в <strong>MetadataExtractor</strong> будет подаваться файл</li>
+                    <li>На выходе ассистента должен быть json-файл, значит <strong>MetadataExtractor</strong> должен возвращать файл или текст </li>
+                </ol>
+                <h5 class="mb-4">Определить тип API grpc-сервиса, наиболее подходящий для ввода и вывода</h5>
+                    <ul class="mb-4">
+                        <li>Для ввода в виде файла и вывода в виде файла наиболее подходит <strong>`ContentInterpreterAPI`</strong> в библиотеке <a href="#mapi"><strong>`mmar_mapi`</strong></a>, модуль <strong>`mmar_mapi.services`</strong></li>
+                    </ul>
+                <h5 class="mb-4">В сгенерированном с помощью шаблона коде указать выбранный тип API grpc-сервиса</h5>
+                <ul class="mb-4">
+                    <li>В файле <strong>`src/metadata_extractor/metadata_extractor.py`</strong> класс <strong>`MetadataExtractor`</strong> наследует класс <strong>`ContentInterpreterAPI`</strong></li>
+                    <li>Определить метод <strong>`interpret`</strong>, необходимый для <strong>`ContentInterpreterAPI`</strong></li>
+                </ul>
+                <h5 class="mb-4">Реализовать часть кода, относящуюся к непосредственной логике работы компоненты</h5>
+                <ul class="mb-4">
+                    <li>Написать логику метода <strong>`interpret`</strong> в соответствии с определенными типами ввода и вывода</li>
+                    <li>Параметры конфигурации указать в файле <strong>`src/metadata_extractor/config.py`</strong> в виде pydantic-моделей</li>
+                </ul>
+                <!-- Сборка компонентов в трек -->
+                <h4 class="mb-4">Сборка компонентов в трек</h4>
+                <h5 class="mb-4">Инициализировать новый трек</h5>
+                    <ul class="mb-4">
+                        <li>Создать файл <strong>`chat-manager-playground/src/chat_manager_playground/tracks/metadata_extraction.py`</strong></li>
+                    </ul>
+
+                <h4 class="mb-4">Определить тип нового трека</h4>
+                <ul class="mb-4">
+                    <li>Библиотекой <strong>`mmar_mapi`</strong> в модуле <strong>`mmar_mapi.tracks`</strong> на выбор предоставляется два типа:
+                        <ol class="mb-2">
+                            <li><strong>`SimpleTrack`</strong> - класс для простого взаимодействия типа запрос-ответ</li>
+                            <li><strong>`StateActionPolicyTrack`</strong> - класс для комплексного взаимодействия с выбором состояния, зависящего от запроса, и выбором действия агента в зависимости от состояния.</li>
+                        </ol>
+                    </li>
+                    <li>Для последовательности работы агента, подходит класс <strong>`SimpleTrack`</strong></li>
+                    <li>В созданном файле <strong>`metadata_extraction.py`</strong> определить класс <strong>`MetadataExtraction(SimpleTrack)`</strong></li>
+                </ul>
+
+                <h4 class="mb-4">Инициализировать grpc-клиенты используемых треком компонентов</h4>
+                    <ul class="mb-4">
+                        <li>Указать домен трека <strong>`DOMAIN = DOMAINS.science`</strong></li>
+                        <li>Указать отображаемое имя трека<strong>`CAPTION = "Метаданные публикации"`</strong></li>
+                        <li>В конструкторе класса <strong>`MetadataExtraction`</strong> с помощью библиотеки <a href="#ptag"><strong>`mmar_ptag`</strong></a> указать
+                        <pre><code class="language-python">def __init__(self, config: Config):
+    self.config = config
+    self.document_extractor = ptag_client(
+        DocumentExtractorAPI, config.addresses.document_extractor
+    )
+    self.metadata_extractor = ptag_client(
+        ContentInterpreterAPI,
+config.addresses.metadata_extractor
+    )
+                        </code></pre>
+                        </li>
+                    </ul>
+
+                <h4 class="mb-4">Реализовать последовательность вызовов компонентов ассистента</h4>
+                <ul class="mb-4">
+                    <li>Реализовать метод <strong>`generate_response`</strong> класса <strong>`MetadataExtraction`</strong>
+                        <ol class="mb-2">
+                            <li>Вызов <a href="#document-extractor"><strong>DocumentExtractor</strong></a> на входящий файл - получение файла со структурой текста</li>
+                            <li>Вызов <strong>MetadataExtractor</strong> на файл с текстом - получение json с метаданными</li>
+                            <li>Вызов <strong>MetadataExtractor</strong> на текст вопроса - получение текста ответа</li>
+                        </ol>
+                    </li>
+                    <li>в качестве примера можно взять содержимое файла <strong>`chat-manager-playground/src/chat_manager_playground/tracks/simple.py`</strong></li>
+                </ul>
+            </div>            
+        </div>
+    </div>
+</section>
+
+<!-- Создание трека на Langchain -->
+<section class="mb-5" id="langchain">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">                            
+                <!-- Создание компонентов -->
+                <h2 class="mb-4">Создание трека на Langchain</h2>
+                <h4 class="mb-4">Создание компонентов</h4>
+                <h5 class="mb-4">Инициализировать необходимые компоненты</h5>
+                    <ul class="mb-4">
+                        <li>Инициализация с помощью существующего <a href="https://gitlab.2a2i.org/agi/templates/maestro-grpc-service-template"><strong>шаблона сервисов</strong></a> </li>
+                        <li>Указание имени нового компонента <strong>langchain-extractor</strong></li>
+                    </ul>
+                <h5 class="mb-4">Определить ввод и вывод нового компонента</h5>
+                <ol class="mb-4">
+                    <li><strong>DocumentExtractor</strong> возвращает текстовый файл со структурой, значит на вход в <strong>LangchainExtractor</strong> будет подаваться файл</li>
+                    <li>На выходе ассистента должен быть json-файл, значит <strong>LangchainExtractor</strong> должен возвращать файл или текст </li>
+                </ol>
+                <h5 class="mb-4">Определить тип API grpc-сервиса, наиболее подходящий для ввода и вывода</h5>
+                    <ul class="mb-4">
+                        <li>Для ввода в виде файла и вывода в виде файла наиболее подходит <strong>`ContentInterpreterAPI`</strong> в библиотеке <a href="#mapi"><strong>`mmar_mapi`</strong></a>, модуль <strong>`mmar_mapi.services`</strong></li>
+                    </ul>
+                <h5 class="mb-4">В сгенерированном с помощью шаблона коде указать выбранный тип API grpc-сервиса</h5>
+                <ul class="mb-4">
+                    <li>В файле <strong>`src/langchain_extractor/langchain_extractor.py`</strong> класс <strong>`LangchainExtractor`</strong> наследует класс <strong>`ContentInterpreterAPI`</strong></li>
+                    <li>Определить метод <strong>`interpret`</strong>, необходимый для <strong>`ContentInterpreterAPI`</strong></li>
+                </ul>
+                <h5 class="mb-4">Реализовать часть кода, относящуюся к непосредственной логике работы компоненты</h5>
+                <ul class="mb-4">
+                    <li>Написать логику метода <strong>`interpret`</strong> в соответствии с определенными типами ввода и вывода</li>
+                    <li>Параметры конфигурации указать в файле <strong>`src/langchain_extractor/config.py`</strong> в виде pydantic-моделей</li>
+                </ul>
+                <!-- Сборка компонентов в трек -->
+                <h4 class="mb-4">Сборка компонентов в трек</h4>
+                <h5 class="mb-4">Инициализировать новый трек</h5>
+                    <ul class="mb-4">
+                        <li>Создать файл <strong>`chat-manager-playground/src/chat_manager_playground/tracks/langchain_extraction.py`</strong></li>
+                    </ul>
+
+                <h4 class="mb-4">Определить тип нового трека</h4>
+                <ul class="mb-4">
+                    <li>Библиотекой <strong>`mmar_mapi`</strong> в модуле <strong>`mmar_mapi.tracks`</strong> на выбор предоставляется два типа:
+                        <ol class="mb-2">
+                            <li><strong>`SimpleTrack`</strong> - класс для простого взаимодействия типа запрос-ответ</li>
+                            <li><strong>`StateActionPolicyTrack`</strong> - класс для комплексного взаимодействия с выбором состояния, зависящего от запроса, и выбором действия агента в зависимости от состояния.</li>
+                        </ol>
+                    </li>
+                    <li>Для последовательности работы агента, подходит класс <strong>`SimpleTrack`</strong></li>
+                    <li>В созданном файле <strong>`langchain_extraction.py`</strong> определить класс <strong>`LangchainExtraction(SimpleTrack)`</strong></li>
+                </ul>
+
+                <h4 class="mb-4">Инициализировать grpc-клиенты используемых треком компонентов</h4>
+                    <ul class="mb-4">
+                        <li>Указать домен трека <strong>`DOMAIN = DOMAINS.science`</strong></li>
+                        <li>Указать отображаемое имя трека<strong>`CAPTION = "Метаданные публикации"`</strong></li>
+                        <li>В конструкторе класса <strong>`LangchainExtraction`</strong> с помощью библиотеки <a href="#ptag"><strong>`mmar_ptag`</strong></a> указать
+                        <pre><code class="language-python">def __init__(self, config: Config):
+    self.config = config
+    self.document_extractor = ptag_client(
+        DocumentExtractorAPI, config.addresses.document_extractor
+    )
+    self.langchain_extractor = ptag_client(
+        ContentInterpreterAPI,
+config.addresses.langchain_extractor
+    )
+                        </code></pre>
+                        </li>
+                    </ul>
+
+
+                <h4 class="mb-4">Реализовать последовательность вызовов компонентов ассистента</h4>
+                <ul class="mb-4">
+                    <li>Реализовать метод <strong>`generate_response`</strong> класса <strong>`LangchainExtraction`</strong>
+                        <ol class="mb-2">
+                            <li>Вызов <a href="#document-extractor"><strong>DocumentExtractor</strong></a> на входящий файл - получение файла со структурой текста</li>
+                            <li>Вызов <strong>LangchainExtractor</strong> на файл с текстом - получение json с метаданными</li>
+                            <li>Вызов <strong>LangchainExtractor</strong> на текст вопроса - получение текста ответа</li>
+                        </ol>
+                    </li>
+                    <li>в качестве примера можно взять содержимое файла <strong>`chat-manager-playground/src/chat_manager_playground/tracks/simple.py`</strong></li>
+                </ul>
+            </div>            
+        </div>
+    </div>
+</section>
+
+<!-- Создание трека на ReAct -->
+<section class="mb-5" id="react">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">                            
+                <!-- Создание компонентов -->
+                <h2 class="mb-4">Создание трека на ReAct</h2>
+                <h4 class="mb-4">Создание компонентов</h4>
+                <h5 class="mb-4">Инициализировать необходимые компоненты</h5>
+                    <ul class="mb-4">
+                        <li>Инициализация с помощью существующего <a href="https://gitlab.2a2i.org/agi/templates/maestro-grpc-service-template"><strong>шаблона сервисов</strong></a> </li>
+                        <li>Указание имени нового компонента <strong>react-extractor</strong></li>
+                    </ul>
+                <h5 class="mb-4">Определить ввод и вывод нового компонента</h5>
+                <ol class="mb-4">
+                    <li><strong>DocumentExtractor</strong> возвращает текстовый файл со структурой, значит на вход в <strong>ReactExtractor</strong> будет подаваться файл</li>
+                    <li>На выходе ассистента должен быть json-файл, значит <strong>ReactExtractor</strong> должен возвращать файл или текст </li>
+                </ol>
+                <h5 class="mb-4">Определить тип API grpc-сервиса, наиболее подходящий для ввода и вывода</h5>
+                    <ul class="mb-4">
+                        <li>Для ввода в виде файла и вывода в виде файла наиболее подходит <strong>`ContentInterpreterAPI`</strong> в библиотеке <a href="#mapi"><strong>`mmar_mapi`</strong></a>, модуль <strong>`mmar_mapi.services`</strong></li>
+                    </ul>
+                <h5 class="mb-4">В сгенерированном с помощью шаблона коде указать выбранный тип API grpc-сервиса</h5>
+                <ul class="mb-4">
+                    <li>В файле <strong>`src/react_extractor/react_extractor.py`</strong> класс <strong>`ReactExtractor`</strong> наследует класс <strong>`ContentInterpreterAPI`</strong></li>
+                    <li>Определить метод <strong>`interpret`</strong>, необходимый для <strong>`ContentInterpreterAPI`</strong></li>
+                </ul>
+                <h5 class="mb-4">Реализовать часть кода, относящуюся к непосредственной логике работы компоненты</h5>
+                <ul class="mb-4">
+                    <li>Написать логику метода <strong>`interpret`</strong> в соответствии с определенными типами ввода и вывода</li>
+                    <li>Параметры конфигурации указать в файле <strong>`src/react_extractor/config.py`</strong> в виде pydantic-моделей</li>
+                </ul>
+                <!-- Сборка компонентов в трек -->
+                <h4 class="mb-4">Сборка компонентов в трек</h4>
+                <h5 class="mb-4">Инициализировать новый трек</h5>
+                    <ul class="mb-4">
+                        <li>Создать файл <strong>`chat-manager-playground/src/chat_manager_playground/tracks/react_extraction.py`</strong></li>
+                    </ul>
+
+                <h4 class="mb-4">Определить тип нового трека</h4>
+                <ul class="mb-4">
+                    <li>Библиотекой <strong>`mmar_mapi`</strong> в модуле <strong>`mmar_mapi.tracks`</strong> на выбор предоставляется два типа:
+                        <ol class="mb-2">
+                            <li><strong>`SimpleTrack`</strong> - класс для простого взаимодействия типа запрос-ответ</li>
+                            <li><strong>`StateActionPolicyTrack`</strong> - класс для комплексного взаимодействия с выбором состояния, зависящего от запроса, и выбором действия агента в зависимости от состояния.</li>
+                            <li><strong>`PromptToolTrack`</strong> - класс для ReAct-взаимодействия с LLM, определяемый набором вызываемых функций и системным промптом..</li>
+                        </ol>
+                    </li>
+                    <li>Для последовательности работы агента, подходит класс <strong>`PromptToolTrack`</strong></li>
+                    <li>В созданном файле <strong>`react_extraction.py`</strong> определить класс <strong>`ReactExtraction(PromptToolTrack)`</strong></li>
+                </ul>
+
+                <h4 class="mb-4">Реализовать вызываемые функции, и их описания.</h4>
+                <p class="mb-4">Удобной оберткой будет класс <strong>`ToolBelt`</strong>.</p>
+                    <ul class="mb-4">
+                        <li>В конструкторе класса <strong>`ToolBelt`</strong> с помощью библиотеки <a href="#ptag"><strong>`mmar_ptag`</strong></a> указать</li>
+                        <pre><code class="language-python">def __init__(self, config: Config):
+    self.config = config
+    self.document_extractor = ptag_client(
+        DocumentExtractorAPI, config.addresses.document_extractor
+    )
+    self.react_extractor = ptag_client(
+        ContentInterpreterAPI,
+config.addresses.react_extractor
+    )
+                    </code></pre>
+                        <li>Метод класса <strong>`tool__get_text_file_from_pdf_file`</strong>
+                            <ul class="mb-4">
+                                <li>Ввод: <strong>`resource_id`</strong> pdf-файла, вывод: <strong>`resource_id`</strong> txt-файла</li>
+                                <li>Вызывает внутри себя<strong>`DocumentExtractor`</strong></li>
+                            </ul>
+                        </li>
+                        <li>Метод класса <strong>`tool__get_metadata_file_from_text_file`</strong>
+                            <ul class="mb-4">
+                                <li>Ввод: <strong>`resource_id`</strong> txt-файла, вывод: <strong>`resource_id`</strong> json-файла</li>
+                                <li>Вызывает внутри себя<strong>`ReactExtractor`</strong></li>
+                            </ul>
+                        </li>
+                        <li>Метод класса <strong>`tool__answer_question_on_metadata`</strong>
+                            <ul class="mb-4">
+                                <li>Ввод: (<strong>`question`, `resource_id`</strong> json-файла), вывод: ответ LLM</li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                <h4 class="mb-4">Инициализировать ReAct трек</h4>
+                    <ul class="mb-4">
+                        <li>Указать домен трека <strong>`DOMAIN = DOMAINS.science`</strong></li>
+                        <li>Указать отображаемое имя трека<strong>`CAPTION = "Метаданные публикации"`</strong></li>
+                        <li>Указать системный промпт для трека</li>
+                        <li>Указать набор вызываемых функций из экземпляра класса <strong>`ToolBelt`</strong></li>
+                    </ul>
+            </div>            
+        </div>
+    </div>
+</section>
+
+
+
+        <!-- =====================================================
+             FOOTER SECTION
+             ===================================================== -->
+        <footer id="page-footer" class="py-5 bg-dark text-white">
+            <div class="container">
+                <div class="row g-4">
+                    <!-- Logo & Description -->
+                    <div class="col-12 col-md-4">
+                        <img src="images/airi_logo_white.svg" alt="AIRI" class="mb-3" style="max-width: 150px" />
+                        <p class="text-secondary small" style="max-width: 350px">
+                            This page was built using the AIRI Institute template for research publications and
+                            scientific projects.
+                        </p>
+                    </div>
+
+                    <!-- Contact Information -->
+                    <div class="col-12 col-md-4">
+                        <h5 class="mb-3">Contact</h5>
+                        <div class="mb-3">
+                            <a href="mailto:partner@airi.net" class="text-decoration-none text-white d-block mb-1">
+                                partner@airi.net
+                            </a>
+                            <p class="text-secondary small mb-0">For scientific cooperation and partnership</p>
+                        </div>
+                        <div>
+                            <a href="mailto:people@airi.net" class="text-decoration-none text-white d-block mb-1">
+                                people@airi.net
+                            </a>
+                            <p class="text-secondary small mb-0">For employment inquiries</p>
+                        </div>
+                    </div>
+
+                    <!-- Social Links -->
+                    <div class="col-12 col-md-4">
+                        <h5 class="mb-3">Follow Us</h5>
+                        <div class="d-flex gap-3">
+                            <a href="https://t.me/airi_research_institute" class="text-white" aria-label="Telegram">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor">
+                                    <path
+                                        d="M16 0C7.164 0 0 7.164 0 16s7.164 16 16 16 16-7.164 16-16S24.836 0 16 0zm7.446 10.88l-2.46 11.584c-.185.826-.673 1.027-1.364.64l-3.768-2.778-1.816 1.75a.948.948 0 01-.76.37l.27-3.84 6.995-6.318c.304-.27-.066-.42-.474-.15l-8.644 5.44-3.726-1.164c-.81-.253-.826-.81.17-1.2l14.568-5.614c.676-.243 1.266.163 1.046 1.2z"
+                                    />
+                                </svg>
+                            </a>
+                            <a href="https://github.com/AIRI-Institute" class="text-white" aria-label="GitHub">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor">
+                                    <path
+                                        d="M16 0C7.164 0 0 7.164 0 16c0 7.07 4.584 13.066 10.942 15.182.8.148 1.094-.348 1.094-.77 0-.38-.014-1.386-.022-2.72-4.45.966-5.39-2.144-5.39-2.144-.728-1.85-1.778-2.342-1.778-2.342-1.452-.992.11-.972.11-.972 1.606.114 2.452 1.65 2.452 1.65 1.426 2.444 3.742 1.738 4.654 1.33.146-1.034.558-1.738 1.016-2.138-3.552-.404-7.288-1.776-7.288-7.906 0-1.748.624-3.176 1.648-4.296-.166-.404-.714-2.03.156-4.234 0 0 1.344-.43 4.402 1.64 1.276-.356 2.646-.532 4.006-.538 1.36.006 2.73.182 4.006.538 3.056-2.07 4.398-1.64 4.398-1.64.872 2.204.324 3.83.158 4.234 1.026 1.12 1.646 2.548 1.646 4.296 0 6.146-3.742 7.498-7.306 7.894.574.494 1.086 1.47 1.086 2.962 0 2.14-.02 3.864-.02 4.39 0 .426.288.926 1.1.77C27.422 29.06 32 23.066 32 16c0-8.836-7.164-16-16-16z"
+                                    />
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Copyright -->
+                <div class="text-center mt-4 pt-4">
+                    
+                    <p class="text-secondary small mb-0">2025 AIRI. <a href="https://mit-license.org/ class="me-2">The MIT License (MIT)</a>.</p>
+                    
+                </div>
+            </div>
+        </footer>
+    </body>
+</html>

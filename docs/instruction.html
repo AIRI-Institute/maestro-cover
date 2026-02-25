@@ -79,8 +79,8 @@
                 <a class="nav-link" href="#langchain">Создание трека на Langchain</a>
                 <a class="nav-link" href="#react">Создание трека на ReAct</a>
                 <a class="nav-link" href="#document-extractor">Сервис Document Extractor</a>
-                <a class="nav-link" href="#ptag">Библиотека mmar-ptag</a>
                 <a class="nav-link" href="#mapi">Библиотека mmar-mapi</a>
+                <a class="nav-link" href="#ptag">Библиотека mmar-ptag</a>
             </nav>
         </nav>
 
@@ -435,6 +435,82 @@ config.addresses.react_extractor
     </div>
 </section>
 
+<!-- Сервис Document Extractor -->
+<section class="mb-5" id="document-extractor">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <!-- Создание компонентов -->
+                <h2 class="mb-4">Сервис Document Extractor</h2>
+                <p class="mb-4">Сервис распознавания текста из документов и изображений для цифрового помощника.</p>
+                <div class="mb-5 d-flex flex-wrap flex-row gap-2 justify-content-left">                            
+                    <a href="https://github.com/AIRI-Institute/maestro-core/blob/b0b93c56931d90e5e48c3cc2138bc199cb27bb18/service--document-extractor/README.md" class="btn btn-primary d-flex align-items-center gap-2 px-4">
+                        <i data-lucide="github" width="18" height="18"></i>
+                        <span>GitHub</span>
+                    </a>
+                </div>
+
+                <h4 class="mb-4">Возможности</h4>
+                    <ul class="mb-4">
+                        <li>Чтение PDF с текстовым слоем</li>
+                        <li>OCR текста с изображений</li>
+                        <li>OCR PDF-сканов</li>
+                        <li>Извлечение таблиц в Markdown</li>
+                        <li>Описания изображений VLM (скоро)</li>
+                    </ul>
+
+                <h4 class="mb-4">Быстрый старт</h4>
+                <h5 class="mb-4">Линтеры</h5>
+
+                <pre><code class="language-bash">pip install black flake8-pyproject mypy
+# Автоформатирование
+black .
+# Проверка
+flake8
+mypy .
+                </code></pre>
+                <p class="mb-4">или через pre-commit</p>
+
+                <pre><code class="language-bash">pip install pre-commit
+pre-commit install
+pre-commit run --all-files # проверка вручную
+                </code></pre>
+
+                <h5 class="mb-4">Развёртывание</h5>
+                <p class="mb-4">Dev:</p>
+                <pre><code class="language-bash">sudo docker-compose -f docker-compose-dev.yaml up --build</code></pre>
+
+                <p class="mb-4">Prod:</p>
+                <pre><code class="language-bash">sudo docker-compose -f docker-compose-dev.yaml up --build</code></pre>
+
+                <h5 class="mb-4">Зависимости</h5>
+                <pre><code class="language-bash"># Ubuntu/Debian
+sudo apt install tesseract-ocr-rus tesseract-ocr-eng -y
+# Python 3.13
+python3.13 -m pip install -r requirements.txt
+                </code></pre>
+                
+                <h5 class="mb-4">Конфигурация приложения</h5>
+                <pre><code class="language-bash"># Отредактируйте под вашу среду
+src/config.py
+                </code></pre>
+
+                <h5 class="mb-4">Примеры API вызовов</h5>
+                <pre><code class="language-java">POST /ocr/text
+Content-Type: multipart/form-data
+file: /path/to/document.pdf
+
+Response: {"text": "распознанный текст"}
+                </code></pre>
+                <pre><code class="language-java">POST /ocr/table
+file: /path/to/table.pdf
+
+Response: {"markdown": "| Col1 | Col2 |\n|------|------|\n| val  | val  |"}
+                </code></pre>
+            </div>            
+        </div>
+    </div>
+</section>
 
 
         <!-- =====================================================

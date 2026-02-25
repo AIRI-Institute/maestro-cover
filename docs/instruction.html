@@ -512,6 +512,119 @@ Response: {"markdown": "| Col1 | Col2 |\n|------|------|\n| val  | val  |"}
     </div>
 </section>
 
+<!-- Библиотека mmar-mapi -->
+<section class="mb-5" id="mapi">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <!-- Создание компонентов -->
+                <h2 class="mb-4">Библиотека mmar-mapi</h2>
+                <p class="mb-4">Мультимодальные архитектуры Maestro API - Python-библиотека, предоставляющая базовые утилиты для создания систем разговорного ИИ, с особым акцентом на медицинские/здравоохранные приложения.</p>
+                <div class="mb-5 d-flex flex-wrap flex-row gap-2 justify-content-left">                            
+                    <a href="https://github.com/AIRI-Institute/maestro-core/blob/b0b93c56931d90e5e48c3cc2138bc199cb27bb18/lib--mmar-mapi/README.md" class="btn btn-primary d-flex align-items-center gap-2 px-4">
+                        <i data-lucide="github" width="18" height="18"></i>
+                        <span>GitHub</span>
+                    </a>
+                </div>
+
+                <h4 class="mb-4">Возможности</h4>
+                    <ul class="mb-4">
+                        <li><strong>Управление чатами:</strong> Фреймворк для управления разговорами с гибкими типами сообщений</li>
+                        <li><strong>Хранение файлов:</strong> Управление ресурсами с поддержкой дедупликации</li>
+                        <li><strong>Обработка документов:</strong> Извлечение контента из различных типов документов</li>
+                        <li><strong>Интеграция LLM:</strong> Интерфейсы для коммуникации с большими языковыми моделями</li>
+                        <li><strong>Парсинг XML:</strong> Утилиты для медицинских диагностических данных</li>
+                    </ul>
+
+                <h4 class="mb-4">Быстрый старт</h4>
+
+                <pre><code class="language-python">from mmar_mapi import Chat, HumanMessage, AIMessage, make_content
+
+# Создание сессии чата
+chat = Chat(
+    context=Context(session_id="session-123", user_id="user-456"),
+    messages=[
+        HumanMessage(content=make_content("Привет, AI!")),
+        AIMessage(content=make_content("Чем я могу тебе сегодня помочь?"))
+    ]
+)
+                </code></pre>
+
+                <pre><code class="language-python">from mmar_mapi import FileStorage, ResourceId
+
+# Хранение и получение файлов
+storage = FileStorage()
+resource_id = storage.upload(b"file content")
+content = storage.download(resource_id)
+                </code></pre>
+
+                <h4 class="mb-4">Основные модули</h4>
+                <h5 class="mb-4">Система чатов (<code>mmar_mapi.models.chat</code>)</h5>
+                    <ul class="mb-4">
+                        <li><code>Chat</code> - Контейнер для разговора с контекстом и сообщениями</li>
+                        <li><code>HumanMessage</code>, <code>AIMessage</code>, <code>MiscMessage</code> - Типы сообщений</li>
+                        <li><code>Content</code> - Гибкий контент с поддержкой текста, ресурсов, команд и виджетов</li>
+                        <li><code>Widget</code>  - UI-компоненты для интерактивных разговоров</li>
+                    </ul>
+                <h5 class="mb-4">Хранение файлов (<code>mmar_mapi.file_storage</code>)</h5>
+                    <ul class="mb-4">
+                        <li><code>FileStorageAPI</code> - Абстрактный интерфейс для операций с файлами</li>
+                        <li><code>FileStorage</code> - Реализация с дедупликацией</li>
+                        <li><code>FileStorageBasic</code> - Простой доступ к файлам без хранилища</li>
+                        <li><code>ResourceId</code>  - Типобезопасные идентификаторы ресурсов</li>
+                    </ul>
+                <h5 class="mb-4">Модели (<code>mmar_mapi.models</code>)</h5>
+                    <ul class="mb-4">
+                        <li><code>TrackInfo</code>, <code>DomainInfo</code> - Категоризация треков и доменов</li>
+                        <li><code>DiagnosticsXMLTagEnum</code>, <code>MTRSXMLTagEnum</code>, <code>UncertaintyXMLTagEnum</code> - Медицинские XML теги</li>
+                    </ul>
+                <h5 class="mb-4">Утилиты (<code>mmar_mapi.utils</code>)</h5>
+                    <ul class="mb-4">
+                        <li><code>make_session_id()</code> - Генератор уникальных идентификаторов сессий</li>
+                        <li><code>chunked()</code> - Разделение итерируемых объектов на чанки</li>
+                        <li><code>XMLParser</code> - Утилита парсинга XML</li>
+                    </ul>
+                <h5 class="mb-4">Сервисы (<code>mmar_mapi.services</code>)</h5>
+                <p class="mb-4">Сервисные API для интеграции с внешними системами:</p>
+                <h6 class="mb-4">LLM Hub (<code>llm_hub.py</code>)</h6>
+                    <ul class="mb-4">
+                        <li><code>LLMHubAPI</code> - Интерфейс для коммуникации с LLM</li>
+                        <li><code>LLMCallProps</code> - Конфигурация вызова</li>
+                        <li><code>LLMPayload</code> - Полезная нагрузка сообщения с вложениями</li>
+                        <li><code>LLMResponseExt</code>  - Расширенный формат ответа</li>
+                    </ul>
+                <h6 class="mb-4">Document Extractor (<code>document_extractor.py</code>)</h6>
+                    <ul class="mb-4">
+                        <li><code>DocumentExtractorAPI</code> - Извлечение контента из документов</li>
+                        <li><code>DocExtractionSpec</code> - Конфигурация извлечения</li>
+                        <li><code>ExtractedTable</code>, <code>ExtractedPicture</code>, <code>ExtractedPageImage</code> - Результаты извлечения</li>
+                    </ul>
+                <h6 class="mb-4">Chat Manager (<code>chat_manager.py</code>)</h6>
+                    <ul class="mb-4">
+                        <li><code>ChatManagerAPI</code> - Управление доменами, треками и ответами чата</li>
+                    </ul>
+                <h6 class="mb-4">Text Processing (<code>text_generator.py</code>, <code>text_processor.py</code>)</h6>
+                    <ul class="mb-4">
+                        <li><code>TextGeneratorAPI</code> - Генерация текста из чата</li>
+                        <li><code>TextProcessorAPI</code> - Обработка текста с контекстом чата</li>
+                    </ul>
+                <h6 class="mb-4">Content Interpreter (<code>content_interpreter.py</code>)</h6>
+                    <ul class="mb-4">
+                        <li><code>ContentInterpreterAPI</code> - Интерпретация ресурсов контента</li>
+                        <li><code>ContentInterpreterRemoteAPI</code> - Удалённая интерпретация контента</li>
+                        <li><code>ContentInterpreterRemoteResponse</code> - Формат удалённого ответа</li>
+                    </ul>
+                <h6 class="mb-4">Дополнительные сервисы</h6>
+                    <ul class="mb-4">
+                        <li><code>BinaryClassifiersAPI</code> - Двоичная классификация текста</li>
+                        <li><code>TranslatorAPI</code> - Перевод</li>
+                        <li><code>CriticAPI</code> - Оценка текста</li>
+                        <li><code>TextExtractorAPI</code> - Извлечение текста из ресурсов</li>
+                    </ul>
+            </div>            
+        </div>
+    </div>
+</section>
 
         <!-- =====================================================
              FOOTER SECTION

@@ -63,7 +63,7 @@
                 position: fixed;
                 top: 80px;
                 left: 20px;
-                width: 220px;
+                width: 250px;
                 max-height: calc(100vh - 140px);
                 overflow-y: auto;
                 z-index: 1000;
@@ -519,7 +519,7 @@ Response: {"markdown": "| Col1 | Col2 |\n|------|------|\n| val  | val  |"}
             <div class="col-lg-8">
                 <!-- Создание компонентов -->
                 <h2 class="mb-4">Библиотека mmar-mapi</h2>
-                <p class="mb-4">Мультимодальные архитектуры Maestro API - Python-библиотека, предоставляющая базовые утилиты для создания систем разговорного ИИ, с особым акцентом на медицинские/здравоохранные приложения.</p>
+                <p class="mb-4">Мультимодальные архитектуры Maestro API - Python-библиотека, предоставляющая базовые утилиты для создания систем разговорного ИИ, с особым акцентом на медицинские/здравоохранные приложения</p>
                 <div class="mb-5 d-flex flex-wrap flex-row gap-2 justify-content-left">                            
                     <a href="https://github.com/AIRI-Institute/maestro-core/blob/b0b93c56931d90e5e48c3cc2138bc199cb27bb18/lib--mmar-mapi/README.md" class="btn btn-primary d-flex align-items-center gap-2 px-4">
                         <i data-lucide="github" width="18" height="18"></i>
@@ -621,6 +621,144 @@ content = storage.download(resource_id)
                         <li><code>CriticAPI</code> - Оценка текста</li>
                         <li><code>TextExtractorAPI</code> - Извлечение текста из ресурсов</li>
                     </ul>
+            </div>            
+        </div>
+    </div>
+</section>
+
+<!-- Библиотека mmar-ptag -->
+<section class="mb-5" id="ptag">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <!-- Создание компонентов -->
+                <h2 class="mb-4">Библиотека mmar-ptag</h2>
+                <p class="mb-4">Фреймворк <strong>pydantically-type-adapted-grpc</strong> для команды мультимодальных архитектур</p>
+                <p class="mb-4"><strong>Основная цель:</strong> упростить определение типобезопасных Python-интерфейсов для разделённых сервисов.</p>
+                <div class="mb-5 d-flex flex-wrap flex-row gap-2 justify-content-left">                            
+                    <a href="https://github.com/AIRI-Institute/maestro-core/blob/b0b93c56931d90e5e48c3cc2138bc199cb27bb18/lib--mmar-ptag/README.md" class="btn btn-primary d-flex align-items-center gap-2 px-4">
+                        <i data-lucide="github" width="18" height="18"></i>
+                        <span>GitHub</span>
+                    </a>
+                </div>
+
+                <h4 class="mb-4">Возможности</h4>
+                    <ul class="mb-4">
+                        <li><strong>Типобезопасный RPC</strong> с использованием Pydantic для валидации</li>
+                        <li><strong>Автоматическое переподключение</strong> с настраиваемым количеством попыток повтора</li>
+                        <li><strong>Встроенная трассировка</strong> с поддержкой trace ID</li>
+                        <li><strong>Дизайн на основе интерфейсов</strong> - определение сервисов как Python-классов</li>
+                        <li><strong>Аргументы только по ключевым словам</strong> - явный и читаемый API</li>
+                    </ul>
+
+                <h4 class="mb-4">Быстрый старт</h4>
+                <h5 class="mb-4">Установка</h5>
+                <pre><code class="language-bash">pip install mmar-ptag</code></pre>
+
+                <h5 class="mb-4">Определение сервиса</h5>
+                    <pre><code class="language-python">from types import SimpleNamespace
+from mmar_ptag import deploy_server
+
+class Greeter:
+    def say_hello(self, *, name: str, count: int = 1, trace_id: str = "") -> dict:
+        return {"message": f"Hello, {name} x{count}"}
+                    </code></pre>
+
+                <h5 class="mb-4">Запуск сервера</h5>
+                    <pre><code class="language-python">deploy_server(
+    config_server=SimpleNamespace(port=50051, max_workers=10),
+    service=Greeter()
+)
+                    </code></pre>
+
+                <h5 class="mb-4">Создание клиента</h5>
+                    <pre><code class="language-python">from mmar_ptag import ptag_client
+
+class Greeter:
+    def say_hello(self, *, name: str, count: int = 1) -> dict:
+        ...
+
+client = ptag_client(Greeter, "localhost:50051")
+result = client.say_hello(name="World", count=3)
+print(result)  # {'message': 'Hello, World x3'}
+                    </code></pre>
+                
+                <h4 class="mb-4">Примеры использования</h4>
+                <h5 class="mb-4">Простой RPC вызов</h5>
+                    <pre><code class="language-python">from mmar_ptag import ptag_client
+
+class Greeter:
+    def say_hello(self, *, name: str, count: int = 1) -> dict:
+        ...
+
+client = ptag_client(Greeter, "localhost:50051")
+result = client.say_hello(name="World", count=3)
+print(result)  # {'message': 'Hello, World x3'}
+                    </code></pre>
+
+                <h5 class="mb-4">Поддержка Trace ID</h5>
+                    <pre><code class="language-python">from mmar_ptag import ptag_client
+
+class UserService:
+    def get_user(self, *, user_id: int, trace_id: str = "") -> dict:
+        ...
+
+client = ptag_client(UserService, "localhost:50051")
+
+# Trace ID автоматически передаётся по всей цепочке вызовов
+result = client.get_user(user_id=123, trace_id="request-abc-123")
+                    </code></pre>
+
+                <h4 class="mb-4">Как это работаеа</h4>
+                    <p class="mb-4"><strong>ptag</strong> использует адаптеры Pydantic для обработки преобразования типов между Python и gRPC/protobuf.</p>
+                    <p class="mb-4"><strong>Example:</strong> <code>client.say_hello(name="World", count=3)</code></p>
+                <h5 class="mb-4">Поток клиента (отправка запроса):</h5>
+                    <pre><code class="language-python">{name="World", count=3}
+    -(args tuple)->
+("World", 3)
+    -(args_adapter.dump_json)->
+["World", 3]
+    -(wrap in PTAGRequest)->
+b'\n\tsay_hello\x12\x0c["World", 3]'
+    -(server receives)->
+                    </code></pre>
+                <h5 class="mb-4">Поток сервера (обработка и ответ):</h5>
+                    <pre><code class="language-python">b'\n\tsay_hello\x12\x0c["World", 3]'
+    -(args_adapter.validate_json)->
+["World", 3]
+    -(bind to kwargs)->
+{name="World", count=3}
+    -(say_hello method)->
+{"message": "Hello, World x3"}
+    -(result_adapter.dump_json)->
+{"message": "Hello, World x3"}
+    -(wrap in PTAGResponse)->
+b'\n\tsay_hello\x12\x1e{"message": "Hello, World x3"}'
+    -(client receives)->
+                    </code></pre>
+                <h5 class="mb-4">Поток клиента (получение ответа):</h5>
+                    <pre><code class="language-python">b'\n\tsay_hello\x12\x1e{"message": "Hello, World x3"}'
+    -(return_adapter.validate_json)->
+{"message": "Hello, World x3"}
+                    </code></pre>
+
+                <p class="mb-4">Это обеспечивает:</p>
+                <ul class="mb-4">
+                        <li>Аргументы валидируются и сериализуются перед отправкой</li>
+                        <li>Возвращаемые значения десериализуются и валидируются после получения</li>
+                        <li>Типобезопасность по всему каналу без ручных определений protobuf</li>
+                    </ul>
+
+                <h4 class="mb-4">Справочник API</h4>
+                <p class="mb-4"><code>ptag_client(interface, address, reconnect_attempts=5)</code></p>
+                <p class="mb-4">Создаёт динамического клиента для заданного интерфейса по указанному gRPC-адресу.</p>
+                    <ul class="mb-4">
+                        <li><code>interface</code>: Тип (класс), определяющий интерфейс сервиса</li>
+                        <li><code>address</code>: Адрес gRPC-сервера (например, <code>"localhost:50051"</code>)</li>
+                        <li><code>reconnect_attempts</code>: Количество попыток переподключения при сбое соединения (по умолчанию: 5)</li>
+                    </ul>
+                <p class="mb-4"><code>ptag_attach(server, service_object)</code></p>
+                <p class="mb-4">Подключает объект сервиса к существующему gRPC-серверу.</p>
             </div>            
         </div>
     </div>
